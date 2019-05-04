@@ -10,6 +10,7 @@ import MahjongPy as mp
 from wrapper import EnvMahjong
 import scipy.io as sio
 from datetime import datetime
+from math import exp, log
 
 now = datetime.now()
 datetime_str = now.strftime("%Y%m%d-%H%M%S")
@@ -32,13 +33,14 @@ agents = [AgentPER(nn=NMnaive(graphs[i], agent_no=i), memory=SimpleMahjongBuffer
 n_games = 1000000
 
 print("Start!")
+noagari_rate = 0.025
+for n in range(1, n_games):
 
-for n in range(n_games):
-
-    if n % 10000 == 0:
+    if n % 5000 == 0:
+        noagari_rate = min([noagari_rate +0.05,1])
         for i in range(4):
             agents[i].nn.save(model_dir="Agent{}-".format(i) + datetime_str + "-Game{}".format(
-                n))  # save network parameters every 10000 episodes
+                n))  # save network parameters every 5000 episodes
     print("\r Game {}".format(n), end='')
 
     episode_dones = [[], [], [], []]
@@ -68,11 +70,12 @@ for n in range(n_games):
             aval_actions = env.t.get_self_actions()
             good_actions = []
             for a in range(len(aval_actions)):
-                if aval_actions[a].action == mp.Action.Riichi:
+                if aval_actions[a].action == mp.Action.Tsumo:
+                    good_actions = [a]
+                    break                  
+                elif aval_actions[a].action == mp.Action.Riichi:
                     good_actions.append(a)
 
-                if aval_actions[a].action == mp.Action.Tsumo:
-                    good_actions.append(a)
             ##########################################################
 
             next_aval_states = env.get_aval_next_states(who)  ## for a single player
@@ -160,12 +163,16 @@ for n in range(n_games):
                     ##################################################
 
             if not np.max(final_score_change) == 0: ## score change
+                decay_rate = 2**(env.t.get_remain_tile()/69 - 1)
                 iw = np.argmax(final_score_change)  # winner
-                agents[iw].remember_episode(episode_states[iw], episode_rewards[iw], episode_dones[iw], weight=np.max(final_score_change))
+                for i in range(4):
+                    if i == iw:
+                        episode_rewards[i][-1] = episode_rewards[i][-1]*decay_rate
+                    agents[i].remember_episode(episode_states[i], episode_rewards[i], episode_dones[i], weight=0)
                 print(' ')
                 print(env.t.get_result().result_type)
             else:
-                if np.random.rand() < 0.025: ## no score change
+                if np.random.rand() < noagari_rate: ## no score change
                     for i in range(4):
                         agents[i].remember_episode(episode_states[i], episode_rewards[i], episode_dones[i], weight=0)
                     print(' ')
