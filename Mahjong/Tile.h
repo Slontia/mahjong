@@ -392,7 +392,7 @@ struct Fulu {
 	// take == 0 说明 (1)23
 	// take == 1 说明 1(2)3
 	// take == 2 说明 12(3)
-	// take在type==Chi的时候才有效，其他时候不用
+	// take对于吃和碰有同样的效果
 
 	Type type;
 	inline std::string to_string() const {

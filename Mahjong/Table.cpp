@@ -428,15 +428,16 @@ std::vector<SelfAction> Player::riichi_get_打牌()
 	return actions;
 }
 
-void Player::move_from_hand_to_fulu(std::vector<Tile*> tiles, Tile * tile)
+void Player::move_from_hand_to_fulu(std::vector<Tile*> tiles, Tile * tile, int 打出玩家, int 此玩家)
 {
 	Fulu fulu;
 	if (is_刻子({ tiles[0]->tile, tiles[1]->tile, tile->tile } )
 		&& tiles.size()==2) {
 		// 碰的情况
 		// 创建对象
+		
 		fulu.type = Fulu::Pon;
-		fulu.take = 0;
+		fulu.take = (打出玩家 - 此玩家 - 1) % 4;
 		fulu.tiles = { tiles[0], tiles[1], tile };
 		
 		// 加入
@@ -480,7 +481,7 @@ void Player::move_from_hand_to_fulu(std::vector<Tile*> tiles, Tile * tile)
 		// 杠的情况
 		// 创建对象
 		fulu.type = Fulu::大明杠;
-		fulu.take = 0;
+		fulu.take = (打出玩家 - 此玩家 - 1) % 4;
 		fulu.tiles = { tiles[0], tiles[1], tiles[2], tile };
 
 		// 加入
@@ -959,7 +960,7 @@ Result Table::GameProcess(bool verbose, std::string yama)
 
 				players[response].门清 = false;
 				players[response].move_from_hand_to_fulu(
-					actions[response].correspond_tiles, tile);
+					actions[response].correspond_tiles, tile, turn, response);
 				turn = response;
 
 				// 这是鸣牌，消除所有人第一巡和一发
@@ -1582,7 +1583,7 @@ void Table::_final_response_mt()
 
 		players[response].门清 = false;
 		players[response].move_from_hand_to_fulu(
-			actions[response].correspond_tiles, tile);
+			actions[response].correspond_tiles, tile, turn, response);
 		turn = response;
 
 		// 这是鸣牌，消除所有人第一巡和一发
@@ -2734,7 +2735,7 @@ void Table::make_selection(int selection)
 
 			players[response].门清 = false;
 			players[response].move_from_hand_to_fulu(
-				actions[response].correspond_tiles, tile);
+				actions[response].correspond_tiles, tile, turn, response);
 			turn = response;
 
 			// 这是鸣牌，消除所有人第一巡和一发
