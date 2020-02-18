@@ -6,6 +6,7 @@
 #include "GamePlay.h"
 #include <random>
 #include <iostream>
+#include <chrono>
 
 using namespace std;
 
@@ -284,6 +285,7 @@ void test_passive_table_auto() {
 					table.make_selection((int)dice_roll);
 				}
 			}
+			cout << table.game_log.to_string();
 		}
 		catch (exception& e) {
 			cout << e.what() << endl;

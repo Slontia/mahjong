@@ -171,13 +171,6 @@ PYBIND11_MODULE(MahjongPy, m)
 		.def("get_next_aval_states_matrix_features_frost2", &Table::get_next_aval_states_matrix_features_frost2)
 		.def("get_next_aval_states_vector_features_frost2", &Table::get_next_aval_states_vector_features_frost2)
 
-		// MT
-		.def("get_phase_mt", &Table::get_phase_mt)
-		.def("make_selection_mt", &Table::make_selection_mt)
-		.def("get_self_actions_mt", &Table::get_self_actions_mt)
-		.def("get_response_actions_mt", &Table::get_response_actions_mt)
-		.def("should_i_make_selection_mt", &Table::should_i_make_selection_mt)
-
 		// 成员变量们
 		.def_readonly("dora_spec", &Table::dora_spec)
 		.def_readonly("DORA", &Table::宝牌指示牌)

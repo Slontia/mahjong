@@ -33,6 +33,9 @@ std::string BaseGameLog::to_string()
 	case LogAction::吃:
 		ss << "吃" << 牌->to_string() << "with" << tiles_to_string(副露);
 		return ss.str();
+	case LogAction::加杠:
+		ss << "加杠" << 牌->to_string();
+		return ss.str();
 	case LogAction::手切:
 		ss << "手切" << 牌->to_string();
 		return ss.str();

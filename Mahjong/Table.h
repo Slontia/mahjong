@@ -7,7 +7,6 @@
 #include "GameResult.h"
 #include "macro.h"
 #include <array>
-#include <mutex>
 #include <algorithm>
 
 constexpr auto N_TILES = (34*4);
@@ -308,26 +307,10 @@ public:
 		GAME_OVER,
 	};
 
-	// These Phases specifies the multithreading cases.
-	enum _Phase_MultiThread_ {
-		P1_ACTION_MT, P2_ACTION_MT, P3_ACTION_MT, P4_ACTION_MT,
-		RESPONSE_MT,
-		GAME_OVER_MT,
-	};
-
 private:
 	std::vector<SelfAction> self_action;
 	std::vector<ResponseAction> response_action;
-
-	// specially for multi thread
-	std::unordered_map<int, std::vector<ResponseAction>> response_action_mt;
-	std::unordered_map<int, ResponseAction> decided_response_action_mt;
-	std::mutex lock;
-	_Phase_MultiThread_ phase_mt;
-	void _action_phase_mt(int selection);
-	void _final_response_mt();
-	void _from_beginning_mt();
-
+	
 	Result result;
 	_Phase_ phase;
 	int selection;
@@ -482,13 +465,6 @@ public:
 	// Make a selection and game moves on.
 	void make_selection(int selection);
 
-	// Multithread selection control, return the status.
-	int get_phase_mt() const;
-	bool make_selection_mt(int player, int selection);
-	const std::vector<SelfAction> get_self_actions_mt(int player);
-	const std::vector<ResponseAction> get_response_actions_mt(int player);
-	bool should_i_make_selection_mt(int player);
-	
 	// Get Information. Return the table itself.
 	inline Table* get_info() { return this; }
 
