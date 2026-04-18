@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.5)
 project(MahjongAlgorithm)
 file(GLOB_RECURSE MahjongAlgorithm_SRC_H ${CMAKE_CURRENT_SOURCE_DIR}/*.h)
 file(GLOB_RECURSE MahjongAlgorithm_SRC_CPP ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
