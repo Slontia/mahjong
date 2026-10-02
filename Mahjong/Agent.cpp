@@ -136,6 +136,19 @@ int RandomPlayer::get_response_action(Table * status, SelfAction action, Tile *t
 	}
 	return (int)dice_roll;
 }
+
+// Placeholder definitions for the ExternPlayer hooks. Nothing provides a real
+// implementation in this project, but PE/COFF linkers (MinGW) resolve every
+// relocation of an extracted object, so the symbols must exist.
+int extern_get_self_action(int, Table*, std::vector<SelfAction>)
+{
+	return -1;
+}
+
+int extern_get_response_action(int, Table*, SelfAction, Tile*, std::vector<ResponseAction>)
+{
+	return -1;
+}
 //
 //static vector<int> tiles_encoder(vector<BaseTile> tiles) {
 //
